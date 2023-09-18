@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="IC2D">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="IC2D">
+
+    <!-- Definitons -->
+    <xacro:property name="slider_upper" value="1.0" />
+    <xacro:property name="slider_lower" value="-1.0" />
+
 
     <!-- Useful Macros -->
 
@@ -20,12 +25,19 @@
     </xacro:macro>
 
     <!-- Specify some colours -->
+    <!-- Rviz color -->
     <material name="nickel">
         <color rgba="${193/255} ${183/255} ${131/255} 1"/>
     </material>
-    
+    <!-- Gazebo color -->
+    <gazebo reference="base_link">
+        <material>
+            Gazebo/White
+        </material>
+    </gazebo>
+
     <!-- This first link called "world" is empty -->
-    
+
     <link name="world"></link>
 
     <joint name="slider_joint" type="prismatic">
@@ -33,7 +45,7 @@
         <parent link="world"/>
         <child link="base_link"/>
         <axis xyz="1 0 0"/>
-        <limit lower="${-pi/2}" upper="${pi/2}" velocity="340" effort="5000"/> 
+        <limit lower="${slider_lower}" upper="${slider_upper}" velocity="340" effort="5000"/>
     </joint>
 
     <link name="base_link">
@@ -61,7 +73,7 @@
 
         <xacro:inertial_box mass="${base_global_mass}" dx="${base_global_width}" 
                             dy="${base_global_height}" dz="${base_global_length}">
-                                <xacro:insert_block name="link_origin" />
+            <xacro:insert_block name="link_origin" />
         </xacro:inertial_box>
 
     </link>
@@ -72,13 +84,12 @@
     <!-- This plugin will publish the joint_states for the selected joints 
             (which robot_state_publisher can then use to broadcast the approprate tf). -->
 
-    <gazebo>
-        <plugin name="gazebo_ros_joint_state_publisher"
-            filename="libgazebo_ros_joint_state_publisher.so">
+    <!-- gazebo>
+        <plugin name="gazebo_ros_joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
             <update_rate>20</update_rate>
             <joint_name>slider_joint</joint_name>
         </plugin>
-    </gazebo>
+    </gazebo -->
 
     <!-- This plugin will read a JointTrajectory message from the /set_joint_trajectory topic 
             and move the machine accordingly. It's a bit clunky but it works. -->
@@ -86,10 +97,37 @@
             e.g. <dynamics damping="10.0" friction="10.0"/> -->
     <!-- Here's an example message to publish to test it:
             ros2 topic pub -1 /set_joint_trajectory trajectory_msgs/msg/JointTrajectory  '{header: {frame_id: world}, joint_names: [slider_joint, arm_joint], points: [  {positions: {0.8,0.6}} ]}' -->
-    <gazebo>
-        <plugin name="gazebo_ros_joint_pose_trajectory"
-            filename="libgazebo_ros_joint_pose_trajectory.so">
+    <!-- gazebo>
+        <plugin name="gazebo_ros_joint_pose_trajectory" filename="libgazebo_ros_joint_pose_trajectory.so">
             <update_rate>2</update_rate>
+        </plugin>
+    </gazebo -->
+
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <joint name="slider_joint">
+            <command_interface name="position">
+                <param name="min">-1.0</param>
+                <param name="max">1.0</param>
+            </command_interface>
+
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+
+            <state_interface name="velocity" />
+            <state_interface name="effort" />
+        </joint>
+    </ros2_control>
+
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <robot_param_node>robot_state_publisher</robot_param_node>
+            <robot_param>robot_description</robot_param>
+            <parameters>$(find ic2d_urdf)/config/ic2d_controllers.yaml</parameters>
         </plugin>
     </gazebo>
 
