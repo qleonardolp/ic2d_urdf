@@ -7,10 +7,20 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+add_executable(ic2d_effort_controller src/effort_controller.cpp)
+ament_target_dependencies(ic2d_effort_controller rclcpp std_msgs)
+
+install(
+  TARGETS
+    ic2d_effort_controller
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(
   DIRECTORY description launch meshes config
