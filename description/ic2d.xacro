@@ -4,7 +4,8 @@
     <!-- Definitons -->
     <xacro:property name="slider_upper" value="10.0" />
     <xacro:property name="slider_lower" value="-10.0" />
-
+    <xacro:property name="slider_effort_lim" value="10000" />
+    <xacro:property name="slider_damping" value="1.00" />
 
     <!-- Useful Macros -->
 
@@ -32,8 +33,14 @@
     <!-- Gazebo color -->
     <gazebo reference="base_link">
         <material>
-            Gazebo/White
+            Gazebo/Gold
         </material>
+    </gazebo>
+
+    <!-- Gazebo Joint Dynamics -->
+    <gazebo reference="slider_joint">
+        <springStiffness>1000</springStiffness>
+        <springReference>0</springReference>
     </gazebo>
 
     <!-- This first link called "world" is empty -->
@@ -45,7 +52,14 @@
         <parent link="world"/>
         <child link="base_link"/>
         <axis xyz="1 0 0"/>
-        <limit lower="${slider_lower}" upper="${slider_upper}" velocity="340" effort="5000"/>
+        <!-- calibration: the reference positions of the joint, 
+        used to calibrate the absolute position of the joint. -->
+        <!-- calibration rising="0.0" /--> 
+        <!-- dynamics: an element specifying physical properties of the joint. 
+        These values are used to specify modeling properties of the joint, 
+        particularly useful for simulation.-->
+        <dynamics damping="${slider_damping}" friction="0.0" />
+        <limit lower="${slider_lower}" upper="${slider_upper}" velocity="340" effort="${slider_effort_lim}"/>
     </joint>
 
     <link name="base_link">
@@ -61,7 +75,7 @@
         <visual>
             <origin xyz="${-base_global_width/2} ${base_global_length/2} 0" rpy="${pi/2} 0 0" />
             <xacro:include_geometry_file filename="base_global"/>
-            <material name="nickel" />
+            <material name="nickel" /> <!-- for Rviz   -->
         </visual>
 
         <collision>
@@ -94,8 +108,13 @@
                 <param name="initial_value">0.0</param>
             </state_interface>
 
-            <state_interface name="velocity" />
-            <state_interface name="effort" />
+            <state_interface name="velocity">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+
+            <state_interface name="effort">
+                <param name="initial_value">0.0</param>
+            </state_interface>
         </joint>
     </ros2_control>
 

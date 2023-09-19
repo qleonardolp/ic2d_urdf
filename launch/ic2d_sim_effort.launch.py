@@ -31,11 +31,20 @@ def generate_launch_description():
     )
 
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
+        PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('gazebo_ros'), 'launch'),
-                '/gazebo.launch.py']),
-        )
+                get_package_share_directory('gazebo_ros'), 
+                'launch',
+                'gazebo.launch.py',
+            ),
+        ),
+        launch_arguments={'world': 
+            os.path.join(
+                get_package_share_directory('ic2d_urdf'), 
+                'world', 'ic2d_simulation.world'
+            )
+        }.items(),
+    )
 
     spawn_entity = Node(
         package='gazebo_ros', 

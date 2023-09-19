@@ -23,7 +23,7 @@ install(
 )
 
 install(
-  DIRECTORY description launch meshes config
+  DIRECTORY description launch meshes config world
   DESTINATION share/${PROJECT_NAME}
 )
 
