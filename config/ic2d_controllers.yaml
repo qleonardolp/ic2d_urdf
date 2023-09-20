@@ -31,3 +31,13 @@ effort_controller:
   ros__parameters:
     joints:
       - slider_joint
+    
+    command_interfaces:
+      - effort
+
+    state_interfaces:
+      - position
+      - velocity
+    
+    state_publish_rate: 2000 # Defaults to 50
+    action_monitor_rate: 2000 # Defaults to 20
