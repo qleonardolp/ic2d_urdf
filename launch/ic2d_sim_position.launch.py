@@ -16,7 +16,7 @@ def generate_launch_description():
     # Load Xacro file:
     xacro_file = os.path.join(
         get_package_share_directory('ic2d_urdf'), 
-        'description/ic2d.xacro'
+        'description/ic2d_position.xacro'
     )
     robot_description_raw = xacro.process_file(xacro_file).toxml()
 
@@ -54,12 +54,6 @@ def generate_launch_description():
                    '-entity', 'ic2d']
     )
 
-    ic2d_effort_controller = Node(
-        package='ic2d_urdf',
-        executable='ic2d_effort_controller',
-        output='screen',
-    )
-
     joint_state_broadcaster = ExecuteProcess(
         cmd=[
             'ros2',
@@ -72,14 +66,14 @@ def generate_launch_description():
         output='both',
     )
     
-    ros2_control_effort = ExecuteProcess(
+    ros2_control = ExecuteProcess(
         cmd=[
             'ros2', 
             'control', 
             'load_controller', 
             '--set-state', 
             'active', 
-            'effort_controller'
+            'position_controller'
         ],
         output='both'
     )
@@ -95,7 +89,7 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=joint_state_broadcaster,
-                on_exit=[ros2_control_effort],
+                on_exit=[ros2_control],
             )
         ),
         gazebo,
