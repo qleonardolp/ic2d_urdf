@@ -7,11 +7,14 @@
     <xacro:property name="slider_effort_lim" value="10000" />
     <xacro:property name="slider_damping" value="0.00" />
 
+    <xacro:property name="pol" value="0.0254" />
+    <xacro:property name="lateral_offset" value="${(0.355-pol)/2}" />
+
     <!-- Useful Macros -->
 
     <xacro:macro name="include_geometry_file" params="filename">
         <geometry>
-            <mesh filename="file://$(find ic2d_urdf)/meshes/${filename}.STL"/>
+            <mesh filename="file://$(find ic2d_urdf)/meshes/${filename}.STL" scale="0.001 0.001 0.001"/>
         </geometry>
     </xacro:macro>
 
@@ -95,6 +98,62 @@
             <xacro:insert_block name="link_origin" />
         </xacro:inertial_box>
 
+    </link>
+
+    <joint name="left_lateral_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="left_lateral_link"/>
+    </joint>
+    
+    <link name="left_lateral_link">
+        <xacro:property name="link_origin">
+            <origin xyz="${-lateral_offset} 0 ${pol*2.5}" rpy="0 0 0"/>
+        </xacro:property>
+
+        <visual>
+            <origin xyz="${-lateral_offset-pol*0.5} ${1.200/2} ${pol}" rpy="${pi/2} 0 0"/>
+            <xacro:include_geometry_file filename="lateral_semunha"/>
+            <material name="nickel" />
+        </visual>
+
+        <collision>
+            <xacro:insert_block name="link_origin"/>
+            <geometry>
+                <box size="${pol} ${1.200} ${pol*3}" />
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="1.0" dx="${pol}" dy="${1.200}" dz="${pol*3}">
+            <xacro:insert_block name="link_origin"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint name="right_lateral_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="right_lateral_link"/>
+    </joint>
+    
+    <link name="right_lateral_link">
+        <xacro:property name="link_origin">
+            <origin xyz="${lateral_offset} 0 ${pol*2.5}" rpy="0 0 0"/>
+        </xacro:property>
+
+        <visual>
+            <origin xyz="${lateral_offset-pol*0.5} ${1.200/2} ${pol}" rpy="${pi/2} 0 0"/>
+            <xacro:include_geometry_file filename="lateral_semunha"/>
+            <material name="nickel" />
+        </visual>
+
+        <collision>
+            <xacro:insert_block name="link_origin"/>
+            <geometry>
+                <box size="${pol} ${1.200} ${pol*3}" />
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="1.0" dx="${pol}" dy="${1.200}" dz="${pol*3}">
+            <xacro:insert_block name="link_origin"/>
+        </xacro:inertial_box>
     </link>
 
     <!-- Necessary config/tags for ros2_control interface with Gazebo Classic -->
