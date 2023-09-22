@@ -54,6 +54,12 @@ def generate_launch_description():
                    '-entity', 'ic2d']
     )
 
+    ic2d_pos_controller = Node(
+        package='ic2d_urdf',
+        executable='ic2d_position_controller',
+        output='screen',
+    )
+
     joint_state_broadcaster = ExecuteProcess(
         cmd=[
             'ros2',
@@ -94,6 +100,7 @@ def generate_launch_description():
         ),
         gazebo,
         robot_state_publisher,
+        ic2d_pos_controller,
         spawn_entity,
     ])
 

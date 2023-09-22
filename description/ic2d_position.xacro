@@ -5,7 +5,7 @@
     <xacro:property name="slider_upper" value="10.0" />
     <xacro:property name="slider_lower" value="-10.0" />
     <xacro:property name="slider_effort_lim" value="10000" />
-    <xacro:property name="slider_damping" value="20.00" />
+    <xacro:property name="slider_damping" value="0.00" />
 
     <!-- Useful Macros -->
 
@@ -61,7 +61,7 @@
         <implicitSpringDamper>true</implicitSpringDamper>
         <stopCfm>0.00010</stopCfm>
         <stopErp>0.1</stopErp> <!-- 0.2 is the default-->
-        <springStiffness>100</springStiffness>
+        <springStiffness>0</springStiffness>
         <springReference>0</springReference>
         <!-- cfmDamping>1.00</cfmDamping -->
     </gazebo>
@@ -71,7 +71,7 @@
         <xacro:property name="base_global_length" value="1.305" />
         <xacro:property name="base_global_height" value="0.0254" />
         <xacro:property name="base_global_width" value="0.355" />
-        <xacro:property name="base_ground_offset" value="0.07" />
+        <xacro:property name="base_ground_offset" value="0.00" />
 
         <xacro:property name="link_origin">
             <origin xyz="0 0 ${base_global_height/2 + base_ground_offset}" rpy="${pi/2} 0 0" />

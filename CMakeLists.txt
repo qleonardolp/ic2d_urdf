@@ -16,9 +16,13 @@ find_package(std_msgs REQUIRED)
 add_executable(ic2d_effort_controller src/effort_controller.cpp)
 ament_target_dependencies(ic2d_effort_controller rclcpp std_msgs)
 
+add_executable(ic2d_position_controller src/position_controller.cpp)
+ament_target_dependencies(ic2d_position_controller rclcpp std_msgs)
+
 install(
   TARGETS
     ic2d_effort_controller
+    ic2d_position_controller
   DESTINATION lib/${PROJECT_NAME}
 )
 
