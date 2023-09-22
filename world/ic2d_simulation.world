@@ -90,15 +90,15 @@
       </link>
     </model>
 
-    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <magnetic_field>16.895e-06 -6.681e-06 -13.862e-06</magnetic_field>
 
     <atmosphere type='adiabatic'/>
 
     <spherical_coordinates>
       <surface_model>EARTH_WGS84</surface_model>
-      <latitude_deg>0</latitude_deg>
-      <longitude_deg>0</longitude_deg>
-      <elevation>0</elevation>
+      <latitude_deg>-22.0072008</latitude_deg>
+      <longitude_deg>-47.8976732</longitude_deg>
+      <elevation>840</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
   </world>

@@ -11,7 +11,7 @@
 
     <xacro:macro name="include_geometry_file" params="filename">
         <geometry>
-            <mesh filename="$(find ic2d_urdf)/meshes/${filename}.STL" scale="0.001 0.001 0.001"/>
+            <mesh filename="$(find ic2d_urdf)/meshes/${filename}.STL"/>
         </geometry>
     </xacro:macro>
 
